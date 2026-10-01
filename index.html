@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クエスターベースカフェ // QUESTAR BASE CAFE</title>
+<meta name="description" content="岐阜県多治見市、JR多治見駅南口から徒歩2分。オタクが集う会員参加型の「育成型店舗」クエスターベースカフェ。クエスター（会員）と一緒にお店を育てる、多治見発のオタクの秘密基地。">
+<meta property="og:title" content="クエスターベースカフェ // QUESTAR BASE CAFE">
+<meta property="og:description" content="オタクが集う会員制カフェ。みんなで創り上げる多治見の育成型店舗。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=M+PLUS+1+Code:wght@400;500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060c;
+  --bg2:#080d18;
+  --panel:rgba(9,17,29,.72);
+  --panel-solid:#0a1220;
+  --line:rgba(0,240,255,.30);
+  --line-soft:rgba(0,240,255,.13);
+  --cyan:#00f0ff;
+  --cyan-2:#38bdf8;
+  --magenta:#ff2e88;
+  --yellow:#ffe600;
+  --lime:#00ff9c;
+  --amber:#ffb020;
+  --text:#c3ecff;
+  --text-dim:#6a8ba3;
+  --mono:'Share Tech Mono','M PLUS 1 Code',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --head:'Orbitron','M PLUS 1 Code',sans-serif;
+  --jp:'M PLUS 1 Code','Noto Sans JP',ui-sans-serif,sans-serif;
+  --glow-cyan:0 0 8px rgba(0,240,255,.75),0 0 22px rgba(0,240,255,.35);
+  --glow-mag:0 0 8px rgba(255,46,136,.75),0 0 22px rgba(255,46,136,.35);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{
+  font-family:var(--jp);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.75;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::selection{background:var(--cyan);color:#04060c}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--head);line-height:1.25;letter-spacing:.02em}
+
+/* ---------- background layers ---------- */
+.bg-stage{position:fixed;inset:0;z-index:-3;background:
+  radial-gradient(1200px 700px at 78% -10%,rgba(255,46,136,.16),transparent 60%),
+  radial-gradient(1000px 800px at 10% 110%,rgba(0,240,255,.16),transparent 60%),
+  linear-gradient(180deg,#04060c 0%,#070c17 45%,#04060c 100%);}
+.bg-grid{
+  position:fixed;left:-25%;right:-25%;bottom:-8%;height:70vh;z-index:-2;
+  background-image:linear-gradient(rgba(0,240,255,.28) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(0,240,255,.28) 1px,transparent 1px);
+  background-size:64px 64px;
+  transform:perspective(360px) rotateX(62deg);
+  transform-origin:50% 100%;
+  mask-image:linear-gradient(180deg,transparent,#000 55%,#000);
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 55%,#000);
+  animation:gridflow 8s linear infinite;
+  opacity:.5;
+}
+@keyframes gridflow{from{background-position:0 0,0 0}to{background-position:0 64px,64px 0}}
+#rain{position:fixed;inset:0;z-index:-1;opacity:.20;pointer-events:none}
+.bg-scan{
+  position:fixed;inset:0;z-index:50;pointer-events:none;
+  background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0 3px,rgba(0,0,0,.35) 3px 4px);
+  mix-blend-mode:multiply;opacity:.32;
+}
+.bg-vignette{position:fixed;inset:0;z-index:49;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.72) 100%)}
+.bg-flash{position:fixed;inset:0;z-index:60;pointer-events:none;background:rgba(0,240,255,.06);opacity:0;animation:flick 7s infinite steps(1)}
+@keyframes flick{0%,97%{opacity:0}97.5%{opacity:.7}98%{opacity:0}99%{opacity:.5}100%{opacity:0}}
+
+/* ---------- shared helpers ---------- */
+.wrap{width:min(1180px,92vw);margin-inline:auto}
+.eyebrow{
+  font-family:var(--mono);font-size:.78rem;letter-spacing:.42em;
+  color:var(--cyan);text-transform:uppercase;display:inline-flex;align-items:center;gap:.7em;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--cyan);box-shadow:var(--glow-cyan)}
+.sec-head{display:flex;flex-direction:column;gap:.55rem;margin-bottom:2.4rem}
+.sec-head h2{font-size:clamp(1.7rem,4.2vw,2.9rem);font-weight:900;color:#eafcff;text-shadow:0 0 16px rgba(0,240,255,.35)}
+.sec-head h2 .jp{font-family:var(--jp);font-weight:700;font-size:.5em;letter-spacing:.06em;color:var(--cyan);display:block;margin-top:.45rem}
+.panel{
+  position:relative;background:var(--panel);border:1px solid var(--line-soft);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+}
+.panel::before,.panel::after{content:"";position:absolute;width:9px;height:9px;border:1px solid var(--cyan);opacity:.8}
+.panel::before{top:6px;left:6px;border-right:0;border-bottom:0}
+.panel::after{bottom:6px;right:6px;border-left:0;border-top:0}
+.chip{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;padding:.24em .7em;border:1px solid var(--line);color:var(--cyan);text-transform:uppercase}
+.btn{
+  display:inline-flex;align-items:center;gap:.6em;cursor:pointer;
+  font-family:var(--mono);font-size:.9rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:.9em 1.6em;color:#04060c;background:var(--cyan);border:1px solid var(--cyan);
+  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
+  transition:transform .18s ease,box-shadow .25s ease,background .25s ease;
+  box-shadow:var(--glow-cyan);
+}
+.btn:hover{transform:translateY(-2px);background:#7df9ff;box-shadow:0 0 14px rgba(0,240,255,.9),0 0 40px rgba(0,240,255,.5)}
+.btn.ghost{background:transparent;color:var(--cyan);box-shadow:none}
+.btn.ghost:hover{background:rgba(0,240,255,.12);box-shadow:var(--glow-cyan)}
+.btn.mag{background:var(--magenta);border-color:var(--magenta);color:#0a0010;box-shadow:var(--glow-mag)}
+.btn.mag:hover{background:#ff64a8;box-shadow:0 0 14px rgba(255,46,136,.9),0 0 40px rgba(255,46,136,.5)}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+/* ---------- HUD header ---------- */
+.hud{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(180deg,rgba(4,6,12,.92),rgba(4,6,12,.68));
+  border-bottom:1px solid var(--line-soft);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.hud::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:30%;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);box-shadow:var(--glow-cyan);animation:sweep 5s linear infinite}
+@keyframes sweep{0%{transform:translateX(-40%)}100%{transform:translateX(300%)}}
+.hud-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem;height:64px}
+.brand{display:flex;align-items:center;gap:.7rem;font-family:var(--head);font-weight:900;letter-spacing:.06em}
+.brand .glyph{width:34px;height:34px;flex:0 0 auto;filter:drop-shadow(0 0 6px rgba(0,240,255,.8))}
+.brand .txt{font-size:.95rem;color:#eafcff;line-height:1.1}
+.brand .txt small{display:block;font-family:var(--mono);font-size:.56rem;letter-spacing:.34em;color:var(--cyan)}
+.nav{display:flex;align-items:center;gap:1.5rem}
+.nav a{position:relative;font-family:var(--mono);font-size:.82rem;letter-spacing:.14em;color:var(--text-dim);text-transform:uppercase;transition:color .2s,text-shadow .2s}
+.nav a:hover{color:var(--cyan);text-shadow:var(--glow-cyan)}
+.nav a::after{content:"";position:absolute;left:0;bottom:-6px;height:1px;width:0;background:var(--cyan);box-shadow:var(--glow-cyan);transition:width .25s}
+.nav a:hover::after{width:100%}
+.hud-status{display:flex;align-items:center;gap:.9rem;font-family:var(--mono);font-size:.72rem;color:var(--text-dim);letter-spacing:.1em}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.burger{display:none;background:none;border:1px solid var(--line);color:var(--cyan);width:40px;height:34px;font-family:var(--mono);cursor:pointer;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px))}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:150px 0 90px;min-height:100svh;display:flex;flex-direction:column;justify-content:center}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:2.4rem;align-items:center;width:100%}
+.hero-title{margin:.8rem 0 .4rem}
+.glitch{
+  position:relative;display:inline-block;font-family:var(--head);font-weight:900;
+  font-size:clamp(2rem,7vw,4.6rem);line-height:1;color:#eafcff;letter-spacing:.03em;
+  text-shadow:0 0 18px rgba(0,240,255,.5);
+}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.glitch::before{left:2px;text-shadow:-2px 0 var(--magenta);clip-path:inset(0 0 55% 0);animation:gl1 3.4s infinite linear alternate-reverse}
+.glitch::after{left:-2px;text-shadow:-2px 0 var(--cyan);clip-path:inset(60% 0 0 0);animation:gl2 2.6s infinite linear alternate-reverse}
+@keyframes gl1{0%,86%,100%{clip-path:inset(0 0 100% 0)}88%{clip-path:inset(10% 0 70% 0)}92%{clip-path:inset(45% 0 30% 0)}96%{clip-path:inset(75% 0 5% 0)}}
+@keyframes gl2{0%,90%,100%{clip-path:inset(100% 0 0 0)}93%{clip-path:inset(60% 0 20% 0)}96%{clip-path:inset(20% 0 65% 0)}}
+.hero-sub{font-family:var(--jp);font-weight:700;font-size:clamp(1rem,2.4vw,1.35rem);color:var(--cyan);letter-spacing:.14em;margin:.6rem 0 1.1rem}
+.hero-lead{max-width:52ch;color:var(--text);font-size:.98rem}
+.hero-cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:1.8rem}
+.hero-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.6rem}
+
+/* terminal window */
+.term{font-family:var(--mono)}
+.term-bar{display:flex;align-items:center;gap:.5rem;padding:.55rem .85rem;border-bottom:1px solid var(--line-soft);background:rgba(0,240,255,.05)}
+.term-bar .lamp{width:10px;height:10px;border-radius:50%}
+.lamp.r{background:#ff4d5e;box-shadow:0 0 6px #ff4d5e}
+.lamp.y{background:var(--yellow);box-shadow:0 0 6px var(--yellow)}
+.lamp.g{background:var(--lime);box-shadow:0 0 6px var(--lime)}
+.term-bar .name{margin-left:.5rem;font-size:.72rem;letter-spacing:.18em;color:var(--text-dim)}
+.term-body{padding:1.1rem 1.15rem;font-size:.86rem;line-height:2;min-height:230px}
+.term-body .row{display:flex;gap:.7rem;color:var(--text-dim)}
+.term-body .pr{color:var(--magenta)}
+.term-body .ok{color:var(--lime)}
+.term-body .hl{color:var(--cyan)}
+.term-body .out{color:var(--text)}
+.cursor{display:inline-block;width:9px;height:1.05em;background:var(--cyan);vertical-align:-2px;box-shadow:var(--glow-cyan);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- stats / HUD readout ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:2.6rem;background:var(--line-soft);border:1px solid var(--line-soft)}
+.stat{background:var(--panel-solid);padding:1.25rem 1.1rem;position:relative;overflow:hidden}
+.stat::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:linear-gradient(90deg,var(--cyan),var(--magenta));opacity:.7}
+.stat .num{font-family:var(--head);font-weight:900;font-size:clamp(1.6rem,3.4vw,2.4rem);color:#eafcff;text-shadow:0 0 14px rgba(0,240,255,.4);line-height:1}
+.stat .num .suffix{font-family:var(--mono);font-size:.5em;color:var(--cyan);margin-left:.15em}
+.stat .lab{font-family:var(--mono);font-size:.68rem;letter-spacing:.2em;color:var(--text-dim);text-transform:uppercase;margin-top:.55rem}
+
+/* ---------- common section ---------- */
+.band{padding:clamp(64px,9vw,112px) 0;position:relative}
+.band.alt{background:linear-gradient(180deg,transparent,rgba(0,240,255,.035),transparent)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:2.6rem;align-items:start}
+.prose p{color:var(--text);margin-bottom:1rem}
+.prose p .em{color:var(--cyan);font-weight:700}
+.quote{
+  font-family:var(--jp);font-weight:700;font-size:clamp(1.15rem,2.6vw,1.7rem);
+  line-height:1.75;color:#eafcff;padding:1.5rem 1.6rem;border-left:2px solid var(--magenta);
+  background:linear-gradient(90deg,rgba(255,46,136,.10),transparent);
+}
+.quote .cy{color:var(--cyan)}
+.feature-list{list-style:none;display:grid;gap:.7rem;margin-top:1.4rem}
+.feature-list li{display:flex;gap:.8rem;align-items:flex-start;font-size:.95rem}
+.feature-list .tick{color:var(--lime);font-family:var(--mono);flex:0 0 auto;text-shadow:0 0 8px var(--lime)}
+.stat-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.card{padding:1.3rem 1.25rem}
+.card h3{font-size:1rem;color:#eafcff;margin-bottom:.5rem;letter-spacing:.04em}
+.card p{font-size:.9rem;color:var(--text-dim)}
+.card .ico{font-family:var(--mono);color:var(--cyan);font-size:1.3rem;display:block;margin-bottom:.6rem;text-shadow:var(--glow-cyan)}
+
+/* ---------- ticker ---------- */
+.ticker{border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);background:rgba(0,240,255,.05);overflow:hidden;padding:.7rem 0}
+.ticker-track{display:flex;gap:3rem;width:max-content;animation:marquee 26s linear infinite;font-family:var(--mono);font-size:.82rem;letter-spacing:.24em;color:var(--cyan);text-transform:uppercase}
+.ticker-track span{white-space:nowrap}
+.ticker-track span i{color:var(--magenta);font-style:normal}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* ---------- membership steps ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.step{padding:1.6rem 1.4rem}
+.step .no{font-family:var(--head);font-weight:900;font-size:2.2rem;color:transparent;-webkit-text-stroke:1px var(--cyan);line-height:1;display:block;margin-bottom:.7rem}
+.step h3{font-size:1.05rem;color:#eafcff;margin-bottom:.5rem}
+.step p{font-size:.9rem;color:var(--text-dim)}
+.quests{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-top:1.2rem}
+.quest{background:var(--panel-solid);padding:1rem 1.1rem;display:flex;gap:.9rem;align-items:flex-start}
+.quest .qn{font-family:var(--mono);color:var(--yellow);font-size:.85rem;flex:0 0 auto;text-shadow:0 0 8px var(--yellow)}
+.quest .qt{font-size:.88rem;color:var(--text)}
+.xp{margin-top:1.4rem;font-family:var(--mono);font-size:.8rem;color:var(--text-dim);letter-spacing:.06em}
+.xp-bar{height:12px;border:1px solid var(--line);margin-top:.6rem;position:relative;background:rgba(0,0,0,.4)}
+.xp-bar i{position:absolute;inset:1px;width:64%;background:repeating-linear-gradient(90deg,var(--cyan) 0 8px,transparent 8px 10px);box-shadow:var(--glow-cyan);animation:xpgrow 2.4s ease-out both}
+@keyframes xpgrow{from{width:0}to{width:64%}}
+/* ---------- activities ---------- */
+.act-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.act{padding:1.5rem 1.4rem;transition:transform .25s ease,box-shadow .3s ease,border-color .3s}
+.act:hover{transform:translateY(-6px);border-color:var(--cyan);box-shadow:0 18px 40px -18px rgba(0,240,255,.5)}
+.act .tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.2em;color:var(--magenta);text-transform:uppercase}
+.act h3{font-family:var(--jp);font-weight:700;font-size:1.08rem;color:#eafcff;margin:.5rem 0}
+.act p{font-size:.88rem;color:var(--text-dim)}
+.act .bar{margin-top:1rem;height:4px;background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--yellow));opacity:.75;animation:hue 6s linear infinite}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+
+/* ---------- share / 間借り ---------- */
+.share-panel{padding:2rem}
+.share-flow{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:1.4rem;font-family:var(--mono);font-size:.76rem;color:var(--text-dim)}
+.share-flow b{color:var(--cyan);font-weight:400}
+.share-flow .arw{color:var(--magenta)}
+
+/* ---------- schedule ---------- */
+.sched{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line-soft);border:1px solid var(--line-soft)}
+.day{background:var(--panel-solid);padding:1rem .8rem;min-height:132px;display:flex;flex-direction:column;gap:.5rem}
+.day .dname{font-family:var(--head);font-weight:700;font-size:.9rem;color:#eafcff}
+.day .dname small{display:block;font-family:var(--mono);font-size:.6rem;color:var(--text-dim);letter-spacing:.2em}
+.slot{font-size:.74rem;padding:.35rem .5rem;border-left:2px solid var(--cyan);background:rgba(0,240,255,.07);color:var(--text)}
+.slot.mag{border-color:var(--magenta);background:rgba(255,46,136,.09)}
+.slot.yel{border-color:var(--yellow);background:rgba(255,230,0,.08)}
+.slot.lim{border-color:var(--lime);background:rgba(0,255,156,.08)}
+.slot b{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;color:var(--cyan)}
+.slot.mag b{color:var(--magenta)}.slot.yel b{color:var(--yellow)}.slot.lim b{color:var(--lime)}
+.sched-note{margin-top:1.2rem;font-size:.85rem;color:var(--text-dim);font-family:var(--mono)}
+
+/* ---------- access ---------- */
+.map-frame{position:relative;aspect-ratio:16/10;border:1px solid var(--line-soft);overflow:hidden;background:#06121c}
+.map-frame iframe{width:100%;height:100%;border:0;filter:invert(.92) hue-rotate(175deg) saturate(1.4) contrast(.95)}
+.map-frame::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,240,255,.06),transparent 30%,rgba(255,46,136,.06));box-shadow:inset 0 0 60px rgba(0,0,0,.6)}
+.info-list{list-style:none;display:grid;gap:.2rem}
+.info-list li{display:grid;grid-template-columns:130px 1fr;gap:1rem;padding:.85rem 0;border-bottom:1px dashed var(--line-soft);font-size:.92rem}
+.info-list .k{font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;padding-top:.2rem}
+.info-list .v{color:var(--text)}
+.info-list .v small{color:var(--text-dim)}
+
+/* ---------- footer ---------- */
+.foot{border-top:1px solid var(--line-soft);padding:60px 0 34px;background:linear-gradient(180deg,transparent,rgba(0,240,255,.05))}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem}
+.foot h4{font-family:var(--mono);font-size:.78rem;letter-spacing:.24em;color:var(--cyan);text-transform:uppercase;margin-bottom:1rem}
+.foot a{color:var(--text-dim);font-size:.88rem;display:block;padding:.28rem 0;transition:color .2s,transform .2s}
+.foot a:hover{color:var(--cyan);transform:translateX(4px)}
+.foot .copy{margin-top:2.6rem;padding-top:1.4rem;border-top:1px solid var(--line-soft);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem;font-family:var(--mono);font-size:.72rem;color:var(--text-dim);letter-spacing:.08em}
+.to-top{position:fixed;right:22px;bottom:22px;z-index:90;width:46px;height:46px;display:grid;place-items:center;background:var(--panel-solid);border:1px solid var(--line);color:var(--cyan);font-family:var(--mono);cursor:pointer;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;box-shadow:var(--glow-cyan);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.to-top.show{opacity:1;visibility:visible}
+@media (max-width:1024px){
+  .hero-grid{grid-template-columns:1fr;gap:2rem}
+  .split{grid-template-columns:1fr;gap:1.8rem}
+  .sched{grid-template-columns:repeat(4,1fr)}
+  .act-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  html{scroll-padding-top:70px}
+  .nav{
+    position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;
+    background:rgba(4,6,12,.98);border-bottom:1px solid var(--line-soft);
+    max-height:0;overflow:hidden;transition:max-height .35s ease;padding:0 6vw;
+  }
+  .nav.open{max-height:340px;padding:1rem 6vw 1.6rem}
+  .nav a{padding:.85rem 0;border-bottom:1px solid var(--line-soft)}
+  .nav a::after{display:none}
+  .burger{display:grid;place-items:center}
+  .hud-status .clock{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat-cards{grid-template-columns:1fr}
+  .act-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .quests{grid-template-columns:1fr}
+  .sched{grid-template-columns:1fr;gap:1px}
+  .day{min-height:0;flex-direction:row;flex-wrap:wrap;align-items:center}
+  .day .dname{flex:0 0 88px}
+  .slot{flex:1 1 140px}
+  .info-list li{grid-template-columns:1fr;gap:.2rem}
+  .foot-grid{grid-template-columns:1fr;gap:1.6rem}
+  .hero{padding-top:118px}
+  .map-frame{aspect-ratio:4/3}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  .reveal{opacity:1;transform:none}
+}
+@media print{
+  .reveal{opacity:1 !important;transform:none !important}
+  .hud,.to-top,.bg-scan,.bg-vignette,.bg-flash{display:none !important}
+}
+</style>
+</head>
+<body>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
+<div class="bg-stage"></div>
+<div class="bg-grid"></div>
+<canvas id="rain" aria-hidden="true"></canvas>
+<div class="bg-vignette"></div>
+<div class="bg-scan"></div>
+<div class="bg-flash"></div>
+<header class="hud">
+  <div class="wrap hud-inner">
+    <a class="brand" href="#top" aria-label="クエスターベースカフェ トップへ">
+      <svg class="glyph" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M32 3 L57 17.5 V46.5 L32 61 L7 46.5 V17.5 Z" stroke="#00f0ff" stroke-width="2.4"/>
+        <path d="M32 12 L48 21 V42 L32 51 L16 42 V21 Z" stroke="#ff2e88" stroke-width="1.3" opacity=".8"/>
+        <circle cx="31" cy="30" r="7" stroke="#00f0ff" stroke-width="2.6"/>
+        <path d="M36.5 35.5 L45 44" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round"/>
+      </svg>
+      <span class="txt">QUESTAR BASE<small>TAJIMI / OTACU BASE</small></span>
+    </a>
+    <nav class="nav" id="nav">
+      <a href="#concept">Concept</a>
+      <a href="#status">Status</a>
+      <a href="#membership">Join</a>
+      <a href="#activities">Activities</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#access">Access</a>
+    </nav>
+    <div class="hud-status">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="clock" id="clock">--:--:--</span>
+      <button class="burger" id="burger" aria-label="メニューを開く" aria-expanded="false">≡</button>
+    </div>
+  </div>
+</header>
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">System Online // Tajimi, Gifu</span>
+        <h1 class="hero-title"><span class="glitch" data-text="QUESTAR BASE CAFE">QUESTAR BASE CAFE</span></h1>
+        <p class="hero-sub">クエスターベースカフェ</p>
+        <p class="hero-lead">オタクが集う会員制カフェ。会員（クエスター）と一緒にお店を作っていく<span style="color:var(--cyan)">「会員参加型店舗」</span>です。あなたの声と活動がお店をレベルアップさせる、多治見駅前のオタクの秘密基地。</p>
+        <div class="hero-cta">
+          <a class="btn" href="#membership">クエスター登録する</a>
+          <a class="btn ghost" href="#access">アクセスを見る</a>
+        </div>
+        <div class="hero-meta">
+          <span class="chip">JR多治見駅 南口 徒歩2分</span>
+          <span class="chip">金・土 20:00−24:00</span>
+          <span class="chip">会員参加型</span>
+          <span class="chip">間借りOK</span>
+        </div>
+      </div>
+      <div class="panel term">
+        <div class="term-bar">
+          <span class="lamp r"></span><span class="lamp y"></span><span class="lamp g"></span>
+          <span class="name">questar@tajimi:~/base$</span>
+        </div>
+        <div class="term-body" id="term">
+          <div class="row"><span class="pr">questar@tajimi:~$</span><span class="out"> boot --cafe</span></div>
+          <div class="row"><span class="ok">[ OK ]</span><span class="out"> 会員参加型モード ... 起動</span></div>
+          <div class="row"><span class="ok">[ OK ]</span><span class="out"> 多治見駅南口 → 徒歩2分 ルート確認</span></div>
+          <div class="row"><span class="ok">[ OK ]</span><span class="out"> ボードゲーム 約200種 ロード完了</span></div>
+          <div class="row"><span class="ok">[ OK ]</span><span class="out"> ドール / タロット / コスプレ 装備確認</span></div>
+          <div class="row"><span class="hl">[BOOT]</span><span class="out"> ようこそ秘密基地へ。きみの「好き」を装備せよ。</span></div>
+          <div class="row"><span class="pr">questar@tajimi:~$</span><span class="out" id="typed"></span><span class="cursor" aria-hidden="true"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat">
+          <div class="num">Lv.<span data-count="3">0</span></div>
+          <div class="lab">Shop Level</div>
+        </div>
+        <div class="stat">
+          <div class="num"><span data-count="212">0</span><span class="suffix">人</span></div>
+          <div class="lab">Questsers / クエスター</div>
+        </div>
+        <div class="stat">
+          <div class="num"><span data-count="200">0</span><span class="suffix">種</span></div>
+          <div class="lab">Board Games</div>
+        </div>
+        <div class="stat">
+          <div class="num"><span data-count="2">0</span><span class="suffix">分</span></div>
+          <div class="lab">From Tajimi Sta.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Board Games ×200 <i>//</i></span><span>Doll Meetup <i>//</i></span><span>Tarot <i>//</i></span><span>Cosplay Clean-up <i>//</i></span><span>Share-kari Shop <i>//</i></span><span>Tajimi Eki-Kita Marche <i>//</i></span><span>Yakumo Map <i>//</i></span><span>Members Only <i>//</i></span>
+      <span>Board Games ×200 <i>//</i></span><span>Doll Meetup <i>//</i></span><span>Tarot <i>//</i></span><span>Cosplay Clean-up <i>//</i></span><span>Share-kari Shop <i>//</i></span><span>Tajimi Eki-Kita Marche <i>//</i></span><span>Yakumo Map <i>//</i></span><span>Members Only <i>//</i></span>
+    </div>
+  </div>
+
+  <section class="band" id="concept">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">01 // Concept</span>
+        <h2>みんなで創る、育つ店。<span class="jp">オタク＝何かに情熱を注げる人</span></h2>
+      </div>
+      <div class="split">
+        <div class="prose reveal">
+          <p>クエスターベースカフェは、岐阜県多治見市のJR多治見駅南口から徒歩2分。青い看板が目印の、オタクが集う<span class="em">会員制カフェ</span>です。</p>
+          <p>ここはただの飲食店ではありません。<span class="em">会員（クエスター）と一緒にお店を作っていく「会員参加型店舗」</span>。会員の声や活動がお店を変えていく、今までにないワクワクするお店を目指しています。</p>
+          <p>合言葉は「<span class="em">オタクとは、何かに情熱を注げる人</span>」。分野は問いません。ボードゲーム、ドール、アニメ、コスプレ、カード、占い——好きを持ち寄る人が、ここでは主役です。</p>
+          <ul class="feature-list">
+            <li><span class="tick">▶</span> 会員の意見でメニューや設備がレベルアップする「育成型店舗」</li>
+            <li><span class="tick">▶</span> 多治見をオタクの聖地に。地域活性化・町おこしにも参戦</li>
+            <li><span class="tick">▶</span> 好きなことをビジネスの第一歩にする「間借り起業」を応援</li>
+          </ul>
+        </div>
+        <div class="reveal">
+          <blockquote class="quote">「<span class="cy">オタク</span>」とは、何かに情熱を注げる人のこと。<br>その情熱を持ち寄って、<span class="cy">みんなで育てる</span>多治見の秘密基地です。</blockquote>
+          <div class="stat-cards" style="margin-top:1.2rem">
+            <div class="panel card"><span class="ico">[ LV ]</span><h3>育成型店舗</h3><p>会員の声と活動で、お店がレベルアップしていく。</p></div>
+            <div class="panel card"><span class="ico">[ KEY ]</span><h3>会員参加型</h3><p>10の質問に答えて、クエスターとして店を育てる。</p></div>
+            <div class="panel card"><span class="ico">[ MAP ]</span><h3>多治見の拠点</h3><p>駅前から、多治見のオタク文化を発信する。</p></div>
+            <div class="panel card"><span class="ico">[ SHOP ]</span><h3>間借り起業</h3><p>曜日ごとに自分の店を持てる、第一歩の場所。</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="band alt" id="status">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">02 // Status</span>
+        <h2>店舗ステータス<span class="jp">お店の現在のレベルと、みんなの記録</span></h2>
+      </div>
+      <div class="split">
+        <div class="panel reveal" style="padding:1.7rem">
+          <span class="eyebrow">Live Readout</span>
+          <ul class="info-list" style="margin-top:1rem">
+            <li><span class="k">Shop Lv.</span><span class="v">Lv.3 <small>／ クエスターの声で上昇中</small></span></li>
+            <li><span class="k">Questsers</span><span class="v">212 人 <small>／ 会員登録の目安</small></span></li>
+            <li><span class="k">Board Games</span><span class="v">約 200 種 <small>／ 常時プレイ可能</small></span></li>
+            <li><span class="k">Open</span><span class="v">金・土 20:00−24:00 <small>／ 2F オタク会員制営業</small></span></li>
+            <li><span class="k">Access</span><span class="v">JR多治見駅 南口 徒歩2分</span></li>
+          </ul>
+        </div>
+        <div class="panel reveal" style="padding:1.7rem">
+          <span class="eyebrow">Growth Gauge</span>
+          <div class="xp">店舗内装・設備 <b style="color:var(--cyan)">78%</b><div class="xp-bar"><i style="width:78%"></i></div></div>
+          <div class="xp">ボードゲーム充実度 <b style="color:var(--cyan)">92%</b><div class="xp-bar"><i style="width:92%"></i></div></div>
+          <div class="xp">イベント開催力 <b style="color:var(--cyan)">64%</b><div class="xp-bar"><i style="width:64%"></i></div></div>
+          <div class="xp">多治見オタク祭りへの道 <b style="color:var(--magenta)">35%</b><div class="xp-bar"><i style="width:35%"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="membership">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">03 // Join the Quest</span>
+        <h2>クエスターになろう<span class="jp">会員登録と、お店を育てる仕組み</span></h2>
+      </div>
+      <div class="steps">
+        <div class="panel step reveal"><span class="no">01</span><h3>来店 &amp; 雰囲気チェック</h3><p>JR多治見駅南口から徒歩2分。金・土の夜、2Fの会員制営業に遊びに来てください。</p></div>
+        <div class="panel step reveal"><span class="no">02</span><h3>クエスター登録</h3><p>会員登録でクエスターに。会員特典や限定イベントに参加できます。</p></div>
+        <div class="panel step reveal"><span class="no">03</span><h3>質問に答えて店を育てる</h3><p>10個の質問に回答。あなたの答えが、お店の次のレベルを決めます。</p></div>
+      </div>
+      <div class="reveal" style="margin-top:2.4rem">
+        <span class="eyebrow">10 Questions // 店を育てる10の質問（例）</span>
+        <div class="quests">
+          <div class="quest"><span class="qn">Q01</span><span class="qt">どんな「好き」を持ってる？</span></div>
+          <div class="quest"><span class="qn">Q02</span><span class="qt">週に何回遊びたい？</span></div>
+          <div class="quest"><span class="qn">Q03</span><span class="qt">ボードゲームはどこまで遊ぶ？</span></div>
+          <div class="quest"><span class="qn">Q04</span><span class="qt">店内にほしい設備は？</span></div>
+          <div class="quest"><span class="qn">Q05</span><span class="qt">参加したいイベントは？</span></div>
+          <div class="quest"><span class="qn">Q06</span><span class="qt">推しに使える予算は？</span></div>
+          <div class="quest"><span class="qn">Q07</span><span class="qt">ひとりでも来られる？</span></div>
+          <div class="quest"><span class="qn">Q08</span><span class="qt">やってみたい間借りは？</span></div>
+          <div class="quest"><span class="qn">Q09</span><span class="qt">お店に足したいメニューは？</span></div>
+          <div class="quest"><span class="qn">Q10</span><span class="qt">多治見をどう盛り上げる？</span></div>
+        </div>
+        <div class="xp">SHOP EXP <b style="color:var(--cyan)">640 / 1000</b> — あと 360 でレベルアップ！<div class="xp-bar"><i style="width:64%"></i></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="band alt" id="activities">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">04 // Activities</span>
+        <h2>ここで遊べること、はじまること<span class="jp">遊ぶ・推す・社会貢献、ぜんぶ基地の仕事</span></h2>
+      </div>
+      <div class="act-grid">
+        <article class="panel act reveal">
+          <span class="tag">// Board Game</span>
+          <h3>ボードゲームカフェ</h3>
+          <p>約200種のボードゲームを常備。初心者も常連も、その日の気分で1本どうぞ。</p>
+          <div class="bar"></div>
+        </article>
+        <article class="panel act reveal">
+          <span class="tag">// Doll</span>
+          <h3>ドール集会</h3>
+          <p>ドールオタクの聖地。お迎え自慢も、撮影会も、交流も。あなたの推しを見せてください。</p>
+          <div class="bar"></div>
+        </article>
+        <article class="panel act reveal">
+          <span class="tag">// Tarot</span>
+          <h3>タロット占い</h3>
+          <p>曜日によって占い師が営業。気になる運勢も、推し活の相談も、ここで占ってみる。</p>
+          <div class="bar"></div>
+        </article>
+        <article class="panel act reveal">
+          <span class="tag">// Social Quest</span>
+          <h3>コスプレ街清掃「転サブ」</h3>
+          <p>コスプレで多治見の街をきれいにする社会貢献活動。好きな格好で、地域に貢献。</p>
+          <div class="bar"></div>
+        </article>
+        <article class="panel act reveal">
+          <span class="tag">// Marche</span>
+          <h3>駅北庁舎マルシェ</h3>
+          <p>浅井団長が企画運営。多治見市役所 駅北庁舎2階でのマルシェなど、町おこしを推進。</p>
+          <div class="bar"></div>
+        </article>
+        <article class="panel act reveal">
+          <span class="tag">// Culture Mix</span>
+          <h3>ビリヤード・ダーツ・ギター・トレカ</h3>
+          <p>遊具も推し活も盛りだくさん。多治見が舞台の「やくならマグカップも」巡礼マップも展示。</p>
+          <div class="bar"></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="share">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">05 // Share-kari</span>
+        <h2>好きを、ビジネスの第一歩に。<span class="jp">間借りシステムで、きみも店長</span></h2>
+      </div>
+      <div class="split">
+        <div class="prose reveal">
+          <p>クエスターベースカフェのもうひとつの顔が、<span class="em">間借りシステム</span>です。</p>
+          <p>曜日によって、ボードゲームカフェやタロット占い屋など、さまざまなお店が営業。固定費の大きい独立ではなく、<span class="em">まずは間借りで「自分の店」を開いてみる</span>。オタクのビジネスの第一歩を応援します。</p>
+          <ul class="feature-list">
+            <li><span class="tick">▶</span> 曜日・時間帯を選んで、自分の業態をテストできる</li>
+            <li><span class="tick">▶</span> 多治見駅前・徒歩2分という好立地でチャレンジ</li>
+            <li><span class="tick">▶</span> クエスター（会員）が最初のお客様になってくれる</li>
+          </ul>
+        </div>
+        <div class="panel share-panel reveal">
+          <span class="eyebrow">Ready to open?</span>
+          <div class="share-flow">
+            <span>自分の好き</span><span class="arw">▶</span>
+            <span><b>業態</b>を決める</span><span class="arw">▶</span>
+            <span><b>曜日</b>をえらぶ</span><span class="arw">▶</span>
+            <span><b>間借り</b>で開店</span><span class="arw">▶</span>
+            <span><b>オタクのビジネス</b>第一歩</span>
+          </div>
+          <p style="margin-top:1.4rem;font-size:.9rem;color:var(--text-dim)">占い・物販・ワークショップ・カフェ業態など、ジャンルは自由。まずは相談からどうぞ。</p>
+          <div class="hero-cta" style="margin-top:1.4rem">
+            <a class="btn mag" href="https://x.com/questarbasecafe" target="_blank" rel="noopener">間借りを相談する</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="band alt" id="schedule">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">06 // Schedule</span>
+        <h2>曜日ごとの顔<span class="jp">昼はマルシェ、夜はオタク会員制営業</span></h2>
+      </div>
+      <div class="sched reveal">
+        <div class="day"><div class="dname">MON<small>月</small></div><div class="slot lim"><b>12:00-17:00</b>ボードゲームカフェ営業</div></div>
+        <div class="day"><div class="dname">TUE<small>火</small></div><div class="slot yel"><b>DAY</b>駅北庁舎マルシェ運営</div></div>
+        <div class="day"><div class="dname">WED<small>水</small></div><div class="slot"><b>CLOSE</b>定休・準備日</div></div>
+        <div class="day"><div class="dname">THU<small>木</small></div><div class="slot yel"><b>DAY</b>駅北庁舎マルシェ運営</div></div>
+        <div class="day"><div class="dname">FRI<small>金</small></div><div class="slot yel"><b>DAY</b>マルシェ運営</div><div class="slot mag"><b>20:00-24:00</b>オタク会員制営業</div></div>
+        <div class="day"><div class="dname">SAT<small>土</small></div><div class="slot mag"><b>20:00-24:00</b>オタク会員制営業</div></div>
+        <div class="day"><div class="dname">SUN<small>日</small></div><div class="slot"><b>EVENT</b>外部イベント・出店</div></div>
+      </div>
+      <p class="sched-note reveal">※ 曜日・時間帯によって活動内容が変わります。最新の営業情報・イベントは公式SNS（X / Instagram / Threads）をご確認ください。</p>
+    </div>
+  </section>
+
+  <section class="band" id="access">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">07 // Access</span>
+        <h2>アクセス<span class="jp">JR多治見駅 南口から徒歩2分</span></h2>
+      </div>
+      <div class="split">
+        <div class="reveal">
+          <ul class="info-list">
+            <li><span class="k">Shop</span><span class="v">クエスターベースカフェ<small>（QUESTAR BASE CAFE）</small></span></li>
+            <li><span class="k">Address</span><span class="v">〒507-0037 岐阜県多治見市本町1丁目78 2F</span></li>
+            <li><span class="k">Access</span><span class="v">JR多治見駅 南口から徒歩約2分</span></li>
+            <li><span class="k">Open</span><span class="v">金・土 20:00−24:00<small>（2F オタク会員制営業）</small></span></li>
+            <li><span class="k">Daytime</span><span class="v">月 昼：ボードゲームカフェ<small>／ 火・木・金 昼：駅北庁舎マルシェ</small></span></li>
+            <li><span class="k">SNS</span><span class="v">X: @questarbasecafe<small>／ Instagram・Threads: @questar.base.cafe</small></span></li>
+          </ul>
+          <div class="hero-cta" style="margin-top:1.6rem">
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A4%9A%E6%B2%BB%E8%A6%8B%E5%B8%82%E6%9C%AC%E7%94%BA1%E4%B8%81%E7%9B%AE78" target="_blank" rel="noopener">Google マップで開く</a>
+          </div>
+        </div>
+        <div class="map-frame reveal">
+          <iframe title="クエスターベースカフェ 地図" src="https://maps.google.com/maps?q=%E5%A4%9A%E6%B2%BB%E8%A6%8B%E5%B8%82%E6%9C%AC%E7%94%BA1%E4%B8%81%E7%9B%AE78&amp;t=&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div>
+      <a class="brand" href="#top">
+        <svg class="glyph" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M32 3 L57 17.5 V46.5 L32 61 L7 46.5 V17.5 Z" stroke="#00f0ff" stroke-width="2.4"/>
+          <circle cx="31" cy="30" r="7" stroke="#00f0ff" stroke-width="2.6"/>
+          <path d="M36.5 35.5 L45 44" stroke="#00f0ff" stroke-width="2.6" stroke-linecap="round"/>
+        </svg>
+        <span class="txt">QUESTAR BASE<small>TAJIMI / OTACU BASE</small></span>
+      </a>
+      <p style="margin-top:1.1rem;font-size:.88rem;color:var(--text-dim);max-width:40ch">オタクが集う会員制カフェ。会員（クエスター）と一緒に創り上げる、多治見の育成型店舗です。</p>
+    </div>
+    <div>
+      <h4>Menu</h4>
+      <a href="#concept">コンセプト</a>
+      <a href="#status">店舗ステータス</a>
+      <a href="#membership">会員登録</a>
+      <a href="#activities">活動内容</a>
+      <a href="#share">間借りシステム</a>
+      <a href="#schedule">営業カレンダー</a>
+      <a href="#access">アクセス</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <a href="https://x.com/questarbasecafe" target="_blank" rel="noopener">X / Twitter @questarbasecafe</a>
+      <a href="https://www.instagram.com/questar.base.cafe/" target="_blank" rel="noopener">Instagram @questar.base.cafe</a>
+      <a href="https://www.threads.com/@questar.base.cafe" target="_blank" rel="noopener">Threads @questar.base.cafe</a>
+      <a href="https://questar-base-cafe.studio.site/" target="_blank" rel="noopener">公式サイト（STUDIO）</a>
+    </div>
+  </div>
+  <div class="wrap copy">
+    <span>© <span id="year">2026</span> QUESTAR BASE CAFE ／ 岐阜県多治見市本町1丁目78 2F</span>
+    <span>SYSTEM ONLINE // TAJIMI, GIFU JAPAN</span>
+  </div>
+</footer>
+<button class="to-top" id="toTop" aria-label="ページ上部へ戻る">↑</button>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- live JST clock ---- */
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tickClock() {
+    var el = $('#clock');
+    if (!el) return;
+    var now = new Date();
+    var jst = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 9 * 3600000);
+    el.textContent = pad(jst.getHours()) + ':' + pad(jst.getMinutes()) + ':' + pad(jst.getSeconds()) + ' JST';
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  /* ---- footer year ---- */
+  var yr = $('#year');
+  if (yr) yr.textContent = new Date().getFullYear();
+
+  /* ---- mobile menu ---- */
+  var burger = $('#burger'), nav = $('#nav');
+  if (burger && nav) {
+    burger.addEventListener('click', function () {
+      var open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.textContent = open ? '\u00d7' : '\u2261';
+    });
+    $$('a', nav).forEach(function (a) {
+      a.addEventListener('click', function () {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        burger.textContent = '\u2261';
+      });
+    });
+  }
+
+  /* ---- terminal typing loop ---- */
+  var typedEl = $('#typed');
+  if (typedEl) {
+    var msg = ' join_questar --now', idx = 0;
+    (function type() {
+      if (idx <= msg.length) {
+        typedEl.textContent = msg.slice(0, idx);
+        idx++;
+        setTimeout(type, reduce ? 0 : 85);
+      } else {
+        setTimeout(function () { idx = 0; typedEl.textContent = ''; type(); }, 2800);
+      }
+    })();
+  }
+
+  /* ---- reveal on scroll ---- */
+  var reveals = $$('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var ro = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); ro.unobserve(en.target); }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { ro.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ---- count-up numbers ---- */
+  function animateCount(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10) || 0;
+    if (reduce) { el.textContent = target.toLocaleString(); return; }
+    var dur = 1500, start = null;
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var counters = $$('[data-count]');
+  if ('IntersectionObserver' in window && !reduce) {
+    var co = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { animateCount(en.target); co.unobserve(en.target); }
+      });
+    }, { threshold: 0.4 });
+    counters.forEach(function (el) { co.observe(el); });
+  } else {
+    counters.forEach(animateCount);
+  }
+
+  /* ---- back to top ---- */
+  var toTop = $('#toTop');
+  if (toTop) {
+    window.addEventListener('scroll', function () {
+      toTop.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
+
+  /* ---- digital rain canvas ---- */
+  var canvas = $('#rain');
+  if (canvas && canvas.getContext) {
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var FS = 16, W = 0, H = 0, cols = 0, rows = 1, pos = [], spd = [];
+    var glyphs = '01\uFF71\uFF72\uFF73\uFF74\uFF75\uFF76\uFF77\uFF78\uFF79\uFF7A<>{}[]#$%&*+=?';
+    function randSpeed() { return 0.55 + Math.random() * 0.9; }
+    function resize() {
+      W = canvas.width = Math.floor(window.innerWidth * dpr);
+      H = canvas.height = Math.floor(window.innerHeight * dpr);
+      cols = Math.max(1, Math.floor(W / (FS * dpr)));
+      rows = Math.max(1, Math.floor(H / (FS * dpr)));
+      pos = []; spd = [];
+      for (var c = 0; c < cols; c++) { pos.push(Math.random() * rows); spd.push(randSpeed()); }
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    function draw() {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,0.08)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.font = (FS * dpr) + 'px monospace';
+      for (var c = 0; c < cols; c++) {
+        var row = Math.floor(pos[c]);
+        var x = c * FS * dpr + dpr, y = row * FS * dpr;
+        ctx.fillStyle = (row % 17 === 0) ? '#ff2e88' : '#00f0ff';
+        ctx.fillText(glyphs.charAt(Math.floor(Math.random() * glyphs.length)), x, y);
+        pos[c] += spd[c];
+        if (pos[c] > rows) { pos[c] = Math.random() * -8; spd[c] = randSpeed(); }
+      }
+    }
+    if (!reduce) { draw(); setInterval(draw, 70); }
+  }
+})();
+</script>
+</body>
+</html>
